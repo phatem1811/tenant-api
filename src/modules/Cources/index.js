@@ -3,7 +3,7 @@ import apiConfig from '@constants/apiConfig';
 import useListBase from '@hooks/useListBase';
 import { Button, Modal, Tag } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { EyeOutlined, UserOutlined } from '@ant-design/icons';
+import { UserOutlined } from '@ant-design/icons';
 import AvatarField from '@components/common/form/AvatarField';
 import ListPage from '@components/common/layout/ListPage';
 import PageWrapper from '@components/common/layout/PageWrapper';
@@ -17,6 +17,8 @@ import { commonMessage } from '@locales/intl';
 import { convertUtcToLocalTime } from '@utils';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { formatMoney } from '@utils/formatMoney';
+import { useNavigate, useLocation } from "react-router-dom";
+import { BookOutlined } from '@ant-design/icons';
 const message = defineMessages({
     objectName: 'Khóa học',
     fee: 'Học phí',
@@ -28,8 +30,9 @@ const CourseListPage = () => {
     const translate = useTranslate();
     const statusValues = translate.formatKeys(statusOptions, ['label']);
     const [showPreviewModal, setShowPreviewModal] = useState(false);
-
-
+    const navigate = useNavigate();
+    const location = useLocation();
+    console.log("checklocation", location.pathname);
     const { data, mixinFuncs, queryFilter, loading, pagination } = useListBase({
         apiConfig: apiConfig.courses,
         options: {
@@ -45,9 +48,32 @@ const CourseListPage = () => {
                     };
                 }
             };
-
+            funcs.additionalActionColumnButtons = () => {
+                if (!mixinFuncs.hasPermission([apiConfig.courses.getById.baseURL])) return {};
+                return {
+                    task: ({ id, name, state, status }) => {
+                        return (
+                            <Button
+                                type="link"
+                                style={{ padding: 0 }}
+                                onClick={() => {
+                                    navigate(
+                                        `/task?courseId=${id}&courseName=${encodeURIComponent(
+                                            name,
+                                        )}&courseState=${state}&courseStatus=${status}`, { state: { courseName: message.objectName, path: location.pathname } },
+                                    );
+                                }}
+                            >
+                                < BookOutlined />
+                            </Button>
+                        );
+                    },
+                };
+            };
 
         },
+
+
     });
 
 
@@ -87,6 +113,7 @@ const CourseListPage = () => {
         mixinFuncs.renderStatusColumn({ width: '90px' }),
         mixinFuncs.renderActionColumn(
             {
+                task: true,
                 edit: true,
                 delete: true,
             },
