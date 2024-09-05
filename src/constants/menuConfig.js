@@ -9,14 +9,24 @@ export const navMenuConfig = [
     {
         label: <FormattedMessage defaultMessage="Quản lý hệ thống" />,
         key: 'quan-ly-he-thong',
-        icon: <IconSettings size={16} />,
+
         // permission: apiConfig.category.getList.baseURL,
         children: [
             {
                 label: <FormattedMessage defaultMessage="Cài đặt" />,
                 key: 'setting',
                 path: routes.settingsPage.path,
+
             },
+
+        ],
+    },
+    {
+
+        label: <FormattedMessage defaultMessage="Quản lý khóa học" />,
+        key: 'quan-ly-khoa-hoc',
+        permission: apiConfig.courses.getList.baseURL,
+        children: [
             {
                 label: <FormattedMessage defaultMessage="Khóa học" />,
                 key: 'course',
