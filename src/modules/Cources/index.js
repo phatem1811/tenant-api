@@ -16,7 +16,7 @@ import useTranslate from '@hooks/useTranslate';
 import { commonMessage } from '@locales/intl';
 import { convertUtcToLocalTime } from '@utils';
 import { defineMessages, FormattedMessage } from 'react-intl';
-
+import { formatMoney } from '@utils/formatMoney';
 const message = defineMessages({
     objectName: 'Khóa học',
     fee: 'Học phí',
@@ -26,10 +26,9 @@ const message = defineMessages({
 
 const CourseListPage = () => {
     const translate = useTranslate();
-    const notification = useNotification();
     const statusValues = translate.formatKeys(statusOptions, ['label']);
     const [showPreviewModal, setShowPreviewModal] = useState(false);
-    const { execute: executeUpdateNewsPin, loading: updateNewsPinLoading } = useFetch(apiConfig.courses.update);
+
 
     const { data, mixinFuncs, queryFilter, loading, pagination } = useListBase({
         apiConfig: apiConfig.courses,
@@ -46,67 +45,12 @@ const CourseListPage = () => {
                     };
                 }
             };
-            funcs.additionalActionColumnButtons = () => {
-                if (!mixinFuncs.hasPermission([apiConfig.courses.getById.baseURL])) return {};
-                return {
-                    preview: ({ id }) => {
-                        return (
-                            <Button
-                                type="link"
-                                style={{ padding: 0 }}
-                                onClick={() => {
-                                    executeGetNews({
-                                        pathParams: {
-                                            id,
-                                        },
-                                        onCompleted: () => setShowPreviewModal(true),
-                                        onError: () =>
-                                            notification({
-                                                type: 'error',
-                                                title: 'Error',
-                                                message: translate.formatMessage(commonMessage.previewFailed),
-                                            }),
-                                    });
-                                }}
-                            >
-                                <EyeOutlined />
-                            </Button>
-                        );
-                    },
-                };
-            };
+
+
         },
     });
 
-    const {
-        execute: executeGetNews,
-        loading: getNewsLoading,
-        data: newsContent,
-    } = useFetch(apiConfig.courses.getById, {
-        immediate: false,
-        mappingData: ({ data }) => data.content,
-    });
 
-
-    const handleUpdatePinTop = (item) => {
-        executeUpdateNewsPin({
-            pathParams: {
-                id: item.id,
-            },
-            data: {
-                ...item,
-                pinTop: Number(!item.pinTop),
-            },
-        });
-    };
-
-
-    const formatMoney = (amount) => {
-        if (isNaN(amount)) {
-            return 'Invalid amount';
-        }
-        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
-    };
     const columns = [
         {
             title: '#',
@@ -124,15 +68,11 @@ const CourseListPage = () => {
         { title: <FormattedMessage defaultMessage="Tên khóa học" />, dataIndex: 'name' },
         {
             title: <FormattedMessage defaultMessage="Tên Môn Học" />, dataIndex: ['subject', 'subjectName'],
-
         },
         {
             title: <FormattedMessage defaultMessage="Học phí" />,
-
             dataIndex: 'fee',
             render: (fee) => formatMoney(fee),
-
-
         },
         {
             title: <FormattedMessage defaultMessage="Ngày Kết Thúc" />,
@@ -170,10 +110,7 @@ const CourseListPage = () => {
 
 
     return (
-        <PageWrapper
-            loading={getNewsLoading}
-            routes={[{ breadcrumbName: translate.formatMessage(message.objectName) }]}
-        >
+        <PageWrapper routes={[{ breadcrumbName: translate.formatMessage(message.objectName) }]}   >
             <ListPage
                 searchForm={mixinFuncs.renderSearchForm({ fields: searchFields, initialValues: queryFilter })}
                 actionBar={mixinFuncs.renderActionBar()}
