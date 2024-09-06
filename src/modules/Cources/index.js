@@ -42,25 +42,32 @@ const CourseListPage = () => {
         override: (funcs) => {
             funcs.mappingData = (response) => {
                 if (response.result === true) {
+
                     return {
                         data: response.data.content,
+                        
                         total: response.data.totalElements,
                     };
+                  
+                    
                 }
             };
             funcs.additionalActionColumnButtons = () => {
                 if (!mixinFuncs.hasPermission([apiConfig.courses.getById.baseURL])) return {};
                 return {
-                    task: ({ id, name, state, status }) => {
+                    
+                    task: ({ id, name, state, status, subject }) => {
+                        const subjectId = subject?.id;
+                        console.log("check subject", subject.id);
                         return (
                             <Button
                                 type="link"
                                 style={{ padding: 0 }}
                                 onClick={() => {
                                     navigate(
-                                        `/task?courseId=${id}&courseName=${encodeURIComponent(
+                                        `/course/task?courseId=${id}&courseName=${encodeURIComponent(
                                             name,
-                                        )}&courseState=${state}&courseStatus=${status}`, { state: { courseName: message.objectName, path: location.pathname } },
+                                        )}&subjectId=${subjectId}&state=${state}&courseStatus=${status}`, { state: { courseName: message.objectName, path: location.pathname } },
                                     );
                                 }}
                             >
@@ -76,7 +83,7 @@ const CourseListPage = () => {
 
     });
 
-
+    console.log("check data",data.subject);
     const columns = [
         {
             title: '#',

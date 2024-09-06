@@ -5,24 +5,25 @@ import useFetch from '@hooks/useFetch';
 import useSaveBase from '@hooks/useSaveBase';
 import React, { useEffect } from 'react';
 import { FormattedMessage, defineMessages } from 'react-intl';
-import CoursesForm from './CoursesForm';
-import routes from './route';
+
+import routes from '../route';
 import useTranslate from '@hooks/useTranslate';
+import TaskForm from './TaskForm';
 
 const message = defineMessages({
-    objectName: 'courses',
+    objectName: 'task',
 });
 
-const CoursesSaveBase = () => {
+const TaskSaveBase = () => {
     const translate = useTranslate();
     const { detail, mixinFuncs, loading, setIsChangedFormValues, isEditing, title } = useSaveBase({
         apiConfig: {
-            getById: apiConfig.courses.getById,
-            create: apiConfig.courses.create,
-            update: apiConfig.courses.update,
+            getById: apiConfig.task.getById,
+            create: apiConfig.task.create,
+            update: apiConfig.task.update,
         },
         options: {
-            getListUrl: routes.CourseListPage.path,
+            getListUrl: routes.TaskListPage.path,
             objectName: translate.formatMessage(message.objectName),
         },
         override: (funcs) => {
@@ -36,19 +37,19 @@ const CoursesSaveBase = () => {
         },
     });
 
-   
 
+
+    console.log("check data detail", detail);
     return (
         <PageWrapper
-      
+
             routes={[
-                { breadcrumbName: <FormattedMessage defaultMessage="Courses" />, path: routes.CourseListPage.path },
+                // { breadcrumbName: <FormattedMessage defaultMessage="Task" />, path: routes.TaskListPageListPage.path },
                 { breadcrumbName: title },
             ]}
             title={title}
         >
-            <CoursesForm
-       
+            <TaskForm
                 setIsChangedFormValues={setIsChangedFormValues}
                 dataDetail={detail ? detail : {}}
                 formId={mixinFuncs.getFormId()}
@@ -60,4 +61,4 @@ const CoursesSaveBase = () => {
     );
 };
 
-export default CoursesSaveBase;
+export default TaskSaveBase;

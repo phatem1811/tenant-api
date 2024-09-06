@@ -1,8 +1,9 @@
 import apiConfig from '@constants/apiConfig';
 import CourseListPage from './index';
 import CoursesSaveBase from './CoursesSaveBase';
-import TaskListPage from './task';
-
+import TaskListPage from './task/index';
+import TaskSaveBase from './task/TaskSaveBase';
+import CreateTask from './task/CreateTask';
 export default {
     CourseListPage: {
         path: '/course',
@@ -20,12 +21,28 @@ export default {
         permission: [apiConfig.courses.create.baseURL, apiConfig.courses.update.baseURL],
     },
     TaskListPage: {
-        path: '/task',
+        path: '/course/task',
         title: 'Task List Page',
         auth: true,
         component: TaskListPage,
         separateCheck: true,
-        permission: [apiConfig.task.update.baseURL, apiConfig.task.delete.baseURL],
+        permission: [apiConfig.task.getList.baseURL,apiConfig.task.create.baseURL, apiConfig.task.update.baseURL],
+    },
+    TaskSaveBase: {
+        path: '/course/task/:id',
+        title: 'Task Save Page',
+        auth: true,
+        component: TaskSaveBase,
+        separateCheck: true,
+        permission: [apiConfig.task.create.baseURL, apiConfig.task.update.baseURL],
+    },
+    CreateTask: {
+        path: '/course/task/lecture',
+        title: 'Create Task',
+        auth: true,
+        component: CreateTask,
+        separateCheck: true,
+        permission: [apiConfig.task.asignAll.baseURL, apiConfig.lecture.getbysubject.baseURL],
     },
 
 };

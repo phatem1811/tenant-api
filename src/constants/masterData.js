@@ -23,6 +23,7 @@ export const orderOptions = [
     { value: 3, label: '3' },
 ];
 
+
 export const commonStatus = [
     { value: STATUS_ACTIVE, label: 'Active', color: 'green' },
     { value: STATUS_PENDING, label: 'Pending', color: 'warning' },
@@ -34,7 +35,12 @@ export const statusOptions = [
     { value: STATUS_PENDING, label: commonMessage.statusPending, color: '#FFBF00' },
     { value: STATUS_INACTIVE, label: commonMessage.statusInactive, color: '#CC0000' },
 ];
-
+export const STATE_TASK_ASIGN = 1;
+export const STATE_TASK_DONE = 2;
+export const taskStateMessage = defineMessages({
+    asign: 'Đang làm',
+    done: 'Hoàn thành',
+});
 export const formSize = {
     small: '700px',
     normal: '800px',

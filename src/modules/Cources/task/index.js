@@ -5,28 +5,32 @@ import { Button, Modal, Tag } from 'antd';
 import React, { Component, useEffect, useState } from 'react';
 import ListPage from '@components/common/layout/ListPage';
 import PageWrapper from '@components/common/layout/PageWrapper';
-import { AppConstants, categoryKind, DEFAULT_FORMAT, DEFAULT_TABLE_ITEM_SIZE } from '@constants';
+import { AppConstants, DEFAULT_FORMAT, DEFAULT_TABLE_ITEM_SIZE } from '@constants';
 import { FieldTypes } from '@constants/formConfig';
 
 import useTranslate from '@hooks/useTranslate';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { DATE_FORMAT_DISPLAY, DATE_FORMAT_VALUE } from '@constants/index';
 import DatePickerField from '@components/common/form/DatePickerField';
-import { useLocation } from 'react-router-dom';
+import { useLocation  ,useNavigate } from 'react-router-dom';
 
 
 
 const message = defineMessages({
     objectName: 'Task',
-    
+
 });
 
 const TaskListPage = () => {
     const translate = useTranslate();
     const [showPreviewModal, setShowPreviewModal] = useState(false);
     const location = useLocation();
+    const { pathname: pagePath } = useLocation();
+    const queryString = location.search;
+    console.log("check pre url ", queryString);
     const courseName = location.state?.courseName;
-    console.log("check",location);
+    const navigate = useNavigate();
+    console.log("check", location);
     const { data, mixinFuncs, queryFilter, loading, pagination } = useListBase({
         apiConfig: apiConfig.task,
         options: {
@@ -42,11 +46,14 @@ const TaskListPage = () => {
                     };
                 }
             };
-
+            funcs.getCreateLink = () => {
+                return `${pagePath}/lecture${queryString}`;
+            };
         },
 
 
     });
+    console.log("dataaaaaaaaaaaaa", data);
 
 
     const columns = [
@@ -62,13 +69,15 @@ const TaskListPage = () => {
             title: <FormattedMessage defaultMessage="Tên sinh viên" />, dataIndex: ['student', 'account', 'fullName'],
         },
         {
-            title: <FormattedMessage defaultMessage="Ngày bắt đầu" />, dataIndex: ['startDate'],
+            title: <FormattedMessage defaultMessage="Ngày bắt đầu" />,
+            dataIndex: 'startDate',
+
         },
         {
-            title: <FormattedMessage defaultMessage="Ngày kết thúc" />, dataIndex: ['dueDate'],
+            title: <FormattedMessage defaultMessage="Ngày kết thúc" />, dataIndex: 'dueDate',
         },
         {
-            title: <FormattedMessage defaultMessage="Ngày kết thúc" />, dataIndex: ['dateComplete'],
+            title: <FormattedMessage defaultMessage="Ngày hoàn thành" />, dataIndex: 'dateComplete',
         },
 
 
@@ -99,7 +108,7 @@ const TaskListPage = () => {
             placeholder: 'Từ ngày',
             component: DatePickerField,
             componentProps: {
-                placeholder: translate.formatMessage({ id: 'selectDate', defaultMessage: 'Chọn ngày' }),
+
                 format: DATE_FORMAT_DISPLAY,
             },
 
@@ -109,7 +118,7 @@ const TaskListPage = () => {
             placeholder: 'Tới ngày',
             component: DatePickerField,
             componentProps: {
-                placeholder: translate.formatMessage({ id: 'selectDate', defaultMessage: 'Chọn ngày' }),
+
                 format: DATE_FORMAT_DISPLAY,
             },
 
@@ -120,7 +129,7 @@ const TaskListPage = () => {
     return (
         <PageWrapper
             routes={[
-                { breadcrumbName: `${courseName.defaultMessage}`, path: location.state.path },
+                // { breadcrumbName: `Khóa học`, path: location.state.path },
                 { breadcrumbName: translate.formatMessage(message.objectName) },
             ]}
         >

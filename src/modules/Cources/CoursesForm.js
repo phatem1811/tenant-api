@@ -59,6 +59,7 @@ const CourseForm = ({ formId, actions, dataDetail, onSubmit, setIsChangedFormVal
 
         values.dateRegister = dayjs().format(DEFAULT_FORMAT);
         values.dateEnd = formatDateString(values.dateEnd, DEFAULT_FORMAT);
+        
         return mixinFuncs.handleSubmit({ ...values });
     };
 
