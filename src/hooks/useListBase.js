@@ -10,7 +10,7 @@ import {
 } from '@constants';
 
 import { Modal, Button, Divider, Tag } from 'antd';
-import { DeleteOutlined, LockOutlined, CheckOutlined, EditOutlined } from '@ant-design/icons';
+import { DeleteOutlined, LockOutlined, CheckOutlined, EditOutlined, BookOutlined  } from '@ant-design/icons';
 
 import { defineMessages, useIntl } from 'react-intl';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -363,8 +363,7 @@ const useListBase = ({
                         {...buttonProps}
                         onClick={(e) => {
                             e.stopPropagation();
-                            navigate(mixinFuncs.getItemDetailLink(dataRow), {
-                                state: { action: 'edit', prevPath: location.pathname },
+                            navigate(mixinFuncs.getItemDetailLink(dataRow), { state: { action: 'edit', prevPath: location.pathname },
                             });
                         }}
                         type="link"
@@ -375,6 +374,7 @@ const useListBase = ({
                 </BaseTooltip>
             );
         },
+       
         ...additionalButtons,
     });
 
@@ -418,6 +418,7 @@ const useListBase = ({
                                     }
 
                                     break;
+                                
                                 default:
                                     // if (mixinFuncs.hasPermission(value?.permissions)) isShow = true;
                                     isShow = true;
